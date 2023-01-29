@@ -20,6 +20,8 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import spring.querydsl.dto.MemberDto;
+import spring.querydsl.dto.QMemberDto;
 import spring.querydsl.entity.Member;
 import spring.querydsl.entity.QMember;
 import spring.querydsl.entity.QTeam;
@@ -358,5 +360,18 @@ public class QuerydslBasicTest {
 		boolean loaded = entityManagerFactory.getPersistenceUnitUtil().isLoaded(findMember.getTeam());
 
 		assertThat(loaded).as("페치 조인 적용").isTrue();
+	}
+
+	//@QueryProjection 활용
+	@Test
+	public void queryProjection() throws Exception {
+		List<MemberDto> result = queryFactory
+			.select(new QMemberDto(member.username, member.age))
+			.from(member)
+			.fetch();
+
+		for (MemberDto results : result) {
+			System.out.println("results = " + results);
+		}
 	}
 }
